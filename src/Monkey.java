@@ -2,7 +2,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 class Animal {
-    void sound() throws FileNotFoundException {
+    void sound() throws IOException {
         System.out.println("Animal sounds");
     }
 }

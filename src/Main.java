@@ -8,12 +8,27 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
+record Employees (Integer id, String name, Double salary, String department) {}
 record Transaction(String category, Double amount, LocalDate date) { }
+record Student(Integer sno, String fname, String lanme, Double age, String dept, Integer passyear, Character sex){};
 
 // The main method must be in a class named "Main".
+
+
 class MainClass {
+
     public static void main(String[] args) {
         System.out.println("hello world..");
+        List<Employees> employees = Arrays.asList(
+                new Employees(123,"Raj", 2000.0,"Engg"),
+                new Employees(143,"Hari", 3500.0,"Engg"),
+                new Employees(121,"Giri", 5300.0,"Engg"),
+                new Employees(111,"Mukundh", 3070.0,"HR"),
+                new Employees(124,"Sailesh", 5020.0,"HR"),
+                new Employees(153,"Senthil", 2010.0,"HR"));
+
+        highestSalEachDept();
 
     }
 
@@ -25,6 +40,151 @@ class MainClass {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private static boolean findAnElement(Integer[] inputList, String synechron) {
+        //TODO finding logic
+        
+
+        return false;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private static void getStudentsFirstnameEndsWithKeyGroupByDeptname() {
+        record Student (Integer id, String fname, String lname, String dept, Integer age, Character sex){};
+        String keyStr = "mu";
+        List<Student> students = Arrays.asList(
+                new Student(1, "Ramu", "aagouri", "computers", 16, 'M'),
+                new Student(1, "raghu", "urzzi", "computers", 16, 'M'),
+                new Student(1, "agamu", "gouriwe", "electronics", 16, 'M'),
+                new Student(1, "hari", "gourier", "computers", 16, 'M'));
+        Map<String, List<Student>> listMap = students.stream()
+                .filter(s -> s.fname().endsWith(keyStr))
+                .sorted(Comparator.comparing(Student::dept))//this sort not working after groupingby in collect below.
+                .collect(Collectors.groupingBy(Student::dept));
+        //print old order
+        listMap.forEach((s, v)->System.out.println(s+"==>"+v));
+        //soft by dept
+        Stream<Map.Entry<String, List<Student>>> sortedListMap =
+                listMap.entrySet().stream()
+                .sorted(Comparator.comparing(Map.Entry::getKey,Comparator.reverseOrder()));
+
+        sortedListMap.forEach(entry->System.out.println(entry.getKey()+"==>"+entry.getValue()));
+
+    }
+    //Studentt(sno, name, dept, passyear, age)
+    //.Get the students whose firstname contains 'br' at the last and group them bt dept name in descending order
+
+
+    private static void makeFirst3LettersToCapital() {
+        List<String> inpt = Arrays.asList("a","b","c","d","e","f");
+        int count=0;
+        inpt.stream()
+                //.filter(lst->lst.l)
+                .map(inp->inpt.indexOf(inp)<3 ? inp.toUpperCase() : inp)
+                .collect(Collectors.toList())
+                .forEach(System.out::println);
+    }
+
+    private static void studentNamesStartWithKey_groupByDeptNameDescOrder() {
+        List<Student> students = new ArrayList<>();
+        students.add(new Student(1,"Ramu","nair", 21.0,"electronics",2009,'M'));
+        students.add(new Student(1,"Bramu","mair", 22.0,"computers",2009,'F'));
+        students.add(new Student(1,"hari","nair", 21.0,"science",2009,'M'));
+        students.add(new Student(1,"Brave","rao", 23.0,"computers",2008,'M'));
+        students.add(new Student(1,"Breeza","rai", 20.0,"electronics",2010,'F'));
+        students.add(new Student(1,"Braandyza","rai", 20.0,"computers",2010,'F'));
+
+        Map<String, List<Student>> StudElem = students.stream()
+                .filter(student -> student.fname().startsWith("Br"))
+                .sorted(Comparator.comparing(Student::dept).reversed())
+                .collect(Collectors.groupingBy(Student::dept));
+        StudElem.forEach((k,v)->System.out.println(k+"  ==> "+v.stream().map(Student::fname).collect(Collectors.toList())));
+    }
+
+    private static void groupWordsByTheirFirstCharacter() {
+        List<String> words = Arrays.asList("apple", "apricot", "banana", "blueberry", "cherry", "date", "fig", "grape", "kiwi", "lemon", "mango", "orange");
+        Map<Character, Long> group = words.stream()
+                .collect(Collectors.groupingBy(c ->
+                                c.charAt(0)
+                        , Collectors.counting()));
+
+        group.forEach((k,v)->System.out.println(k+"  ==> "+v));
+    }
+
+    private static void findLargestWordWithDistinctChars() {
+        List<String> words = Arrays.asList("apple", "banana", "cherry", "date", "fig", "grape", "kiwi", "lemon", "mango", "orange");
+        words.stream()
+                .filter(MainClass::isDistinct)
+                .max((w1,w2)->Integer.compare(w1.length(),w2.length()));
+    }
+
+    private static boolean isDistinct(String word) {
+        long distCount = word.chars().distinct().count();
+        return distCount==word.length();
+    }
+
+
+    public class UpstreamDownstreamExample {
+        public static void main(String[] args) {
+            List<String> names = Arrays.asList("Alice", "Bob", "Charlie", "Dave");
+
+            // Upstream: Source of data / input file
+            // Creating a stream from the list of names
+            List<String> filteredNames = names.stream()
+                    .filter(name -> name.startsWith("C"))  // Intermediate operation
+                    .collect(Collectors.toList());         // Downstream: Terminal operation
+
+            // Downstream: Consuming the processed data / output file
+            filteredNames.forEach(System.out::println);
+        }
+    }
+
+    private static void filterWordsStartWithGivenString_countDistinctCharsPrintItsCountAgainstEachList() {
+        String key = "aa";
+        String inputArray[] = new String[]{"aaryanna", "aayanna", "airianna", "alassandra", "allanna", "allannah", "allessandra", "allianna", "allyanna", "anastaisa", "anastashia", "anastasia", "annabella", "annabelle", "annebelle"};
+
+        Map<String, Long> elementsMap = Arrays.stream(inputArray)
+                //.filter(s -> s.substring(0, 2).contains(key))
+                .filter(word -> word.startsWith(key))
+                .collect(Collectors.toMap(
+                        word -> word,
+                        word -> word.chars().distinct().count()
+                ));
+        elementsMap.forEach((k,val)->System.out.println(k+" ==> "+val));
+    }
 
     private static void printPrimeNumbersFromList() {
         //printPrimeNumbersFromList();
@@ -168,12 +328,17 @@ private void checkEmpPresent(){
         BinaryOperator<Employee> op = (e1, e2)-> e1.getSalary() > e2.getSalary() ? e1:e2;
         el.stream()
                 .collect(Collectors.groupingBy(e->e.getDept(),Collectors.reducing(op)))
-                .forEach((k,v)->System.out.println(k+" => "+v.get().getName()+", "+v.get().getSalary()));*/
+                .forEach((k,v)->System.out.println(k+" => "+v.get().getName()+", "+v.get().getSalary()));
         //Method2...
         Comparator<? super Employee> sal = Comparator.comparing(Employee::getSalary);
         Map<String, Optional<Employee>> ZXc = el.stream()
                 .collect(Collectors.groupingBy(Employee::getDept, Collectors.reducing(BinaryOperator.maxBy(sal))));
-        System.out.println();
+
+        //Method3...***
+        Map<String, Optional<Employee>> ZXc3 = el.stream()
+                .collect(Collectors.groupingBy(Employee::getDept, Collectors.maxBy(Comparator.comparing(Employee::getSalary))));
+
+        ZXc3.forEach((k,v)->System.out.println(k+" => "+v.get().getName()+", "+v.get().getSalary()));
     }
 
     private static void isPalindromJava8(String ajax) {
@@ -321,7 +486,8 @@ private void checkEmpPresent(){
 
     private static void whileTrueAlwaysNsystemExitOverFinally() {
         //***Question1 what happens if while condition flag is always true or no changes to the flag--- infinite loop
-        //***Question2 what happens if the System.exit(1); is present just before finally block. -- System.exit(1) terminates program over finally block
+        //***Question2 what happens if the System.exit(1); is present just before finally block.
+        //          -- System.exit(1) terminates program over finally block
         boolean flag = false;
         try {
             if (flag) {
@@ -344,7 +510,7 @@ private void checkEmpPresent(){
         System.out.println(x.concat(y)); //Output. abcabc
         x.concat(y);
         System.out.println(x);//Output. abc
-        // above line, we havnot put concat ouput to x back, so x has its old value abc
+        // above line, we havnot put concat ouput to a variable x back, so x has its old value abc
     }
 
 
